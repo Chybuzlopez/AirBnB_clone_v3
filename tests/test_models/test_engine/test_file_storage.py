@@ -67,6 +67,27 @@ test_file_storage.py'])
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
 
+    def test_filestorage_get_count():
+   	file_path = "test_filestorage.pkl"
+
+    	obj1 = MyClass(id="1", name="Object 1")
+    	obj2 = MyClass(id="2", name="Object 2")
+
+    	storage = FileStorage(file_path)
+    	storage.add(obj1)
+    	storage.add(obj2)
+
+    	# Test get method
+    	assert storage.get(MyClass, "1") == obj1
+    	assert storage.get(MyClass, "3") is None
+
+    	# Test count method
+    	assert storage.count() == 2
+    	assert storage.count(MyClass) == 2
+    	assert storage.count(OtherClass) == 0
+
+    	os.remove(file_path)
+
 
 class TestFileStorage(unittest.TestCase):
     """Test the FileStorage class"""

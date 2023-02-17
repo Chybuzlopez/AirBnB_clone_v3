@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+i!/usr/bin/python3
 """
 Contains the TestDBStorageDocs and TestDBStorage classes
 """
@@ -66,6 +66,34 @@ test_db_storage.py'])
                              "{:s} method needs a docstring".format(func[0]))
             self.assertTrue(len(func[1].__doc__) >= 1,
                             "{:s} method needs a docstring".format(func[0]))
+
+    def test_dbstorage_get_count():
+   	 db_uri = "sqlite:///test_dbstorage.sqlite"
+   	 engine = create_engine(db_uri)
+   	 Base.metadata.create_all(engine)
+   	 session = sessionmaker(bind=engine)()
+
+   	 obj1 = MyClass(id="1", name="Object 1")
+   	 obj2 = MyClass(id="2", name="Object 2")
+
+   	 storage = DBStorage(db_uri)
+   	 storage.add(obj1)
+   	 storage.add(obj2)
+
+   	 # Test get method
+   	 assert storage.get(MyClass, "1") == obj1
+   	 assert storage.get(MyClass, "3") is None
+
+   	 # Test count method
+   	 assert storage.count() == 2
+   	 assert storage.count(MyClass) == 2
+   	 assert storage.count(OtherClass) == 0
+
+   	 session.query(MyClass).delete()
+   	 session.commit()
+
+
+     
 
 
 class TestFileStorage(unittest.TestCase):
