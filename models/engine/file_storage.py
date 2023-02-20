@@ -19,6 +19,15 @@ classes = {"Amenity": Amenity, "BaseModel": BaseModel, "City": City,
 class FileStorage:
     """serializes instances to a JSON file & deserializes back to instances"""
 
+    def __init__(self):
+        self.users = {}
+
+    def add_user(self, user):
+        hashed_password = user._hash_password(user.password)
+        user_data = user.to_dict(include_password=True)
+        user_data['password'] = hashed_password
+        self.users[user.username] = user_data
+
     # string - path to the JSON file
     __file_path = "file.json"
     # dictionary - empty but will store all objects by <class name>.id

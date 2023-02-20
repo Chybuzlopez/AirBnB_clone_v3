@@ -39,6 +39,13 @@ class DBStorage:
                                              HBNB_MYSQL_DB))
         if HBNB_ENV == "test":
             Base.metadata.drop_all(self.__engine)
+	self.users = {}
+
+    def add_user(self, user):
+        hashed_password = user._hash_password(user.password)
+        user_data = user.to_dict()
+        user_data['password'] = hashed_password
+        self.users[user.username] = user_data
 
     def all(self, cls=None):
         """query on the current database session"""
